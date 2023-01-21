@@ -1,0 +1,26 @@
+---
+resources:
+- name: upstream-copilot.vim
+  type: git
+  icon: github
+  source:
+    uri: https://github.com/github/copilot.vim
+- name: fork-copilot.vim
+  type: git
+  icon: github
+  source:
+    uri: git@github.com:ships/copilot.vim
+    branch: release
+    private_key: |
+      ((github-ssh-ships.private-key))
+
+jobs:
+- name: sync-copilot.vim
+  public: true
+  plan:
+  - get: upstream-copilot.vim
+    trigger: true
+  - put: fork-copilot.vim
+    params:
+      repository: upstream-copilot.vim
+      rebase: true
