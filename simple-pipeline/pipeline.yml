@@ -1,0 +1,40 @@
+---
+resource_types: []
+
+resources:
+- name: every_2h
+  type: time
+  source:
+    interval: 2h
+
+jobs:
+- name: hello-linux
+  public: true
+  plan:
+  - in_parallel:
+    - get: every_2h
+      trigger: true
+    - task: simple-task
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: busybox
+        run:
+          path: echo
+          args:
+          - Hello, world!
+- name: hello-darwin
+  public: true
+  plan:
+  - in_parallel:
+    - get: every_2h
+      trigger: true
+    - task: simple-task
+      config:
+        platform: darwin
+        run:
+          path: echo
+          args:
+          - Hello, world!
